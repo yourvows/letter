@@ -1,33 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLetterDto } from './dto/create-letter.dto';
-import { UpdateLetterDto } from './dto/update-letter.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateLetterDto } from './dto/create-letter.dto'
+import { PrismaService } from '../prisma.service'
+import { UpdateLetterDto } from './dto/update-letter.dto'
 
 @Injectable()
 export class LettersService {
-  create(createLetterDto: CreateLetterDto) {
-    return 'This action adds a new letter';
-  }
+	constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    const letters = [
-      {
-        id: 1,
-        title: 'Test Letter',
-        content: 'Test Letter Content',
-      },
-    ];
-    return letters;
-  }
+	async create(dto: CreateLetterDto) {
+		const { title, body, recipientId, file } = dto
 
-  findOne(id: number) {
-    return `This action returns a #${id} letter`;
-  }
+		return this.prisma.letter.create({
+			data: { title, body, recipientId, file }
+		})
+	}
 
-  update(id: number, updateLetterDto: UpdateLetterDto) {
-    return `This action updates a #${id} letter`;
-  }
+	async update(dto: UpdateLetterDto) {
+		const { id, title, body, file } = dto
+		return this.prisma.letter.update({
+			where: { id },
+			data: { title, body, file }
+		})
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} letter`;
-  }
+	async getAll() {
+		return this.prisma.letter.findMany()
+	}
 }

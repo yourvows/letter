@@ -1,4 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateLetterDto } from './create-letter.dto';
+import { IsNotEmpty, IsString } from 'class-validator'
 
-export class UpdateLetterDto extends PartialType(CreateLetterDto) {}
+export class UpdateLetterDto {
+	@IsNotEmpty()
+	@IsString()
+	id: string
+
+	@IsNotEmpty()
+	@IsString()
+	title: string
+
+	@IsNotEmpty()
+	@IsString()
+	body: string
+
+	@IsNotEmpty()
+	@IsString()
+	file?: string
+}

@@ -1,37 +1,18 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { LettersService } from './letters.service';
-import { CreateLetterDto } from './dto/create-letter.dto';
-import { UpdateLetterDto } from './dto/update-letter.dto';
+import { Controller, Post, Body, Get } from '@nestjs/common'
+import { LettersService } from './letters.service'
+import { CreateLetterDto } from './dto/create-letter.dto'
 
 @Controller('letters')
 export class LettersController {
-  constructor(private readonly lettersService: LettersService) {}
+	constructor(private readonly lettersService: LettersService) {}
 
-  @Post()
-  create(@Body() createLetterDto: CreateLetterDto) {
-    return this.lettersService.create(createLetterDto);
-  }
+	@Post()
+	async create(@Body() dto: CreateLetterDto) {
+		return this.lettersService.create(dto)
+	}
 
-  @Get()
-  findAll() {
-    return this.lettersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.lettersService.findOne(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lettersService.remove(+id);
-  }
+	@Get()
+	async getAll() {
+		return this.lettersService.getAll()
+	}
 }

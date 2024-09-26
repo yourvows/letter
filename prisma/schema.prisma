@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(cuid()) @map("_id")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  name       String
+  username   String      @unique
+  password   String
+  role       UserRole    @default(ADMIN)
+  recipients Recipient[]
+
+  @@map("user")
+}
+
+model Recipient {
+  id        String   @id @default(cuid()) @map("_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  username  String   @unique
+  password  String
+  role      UserRole @default(USER)
+  userId    String?  @map("user_id")
+  letters   Letter[]
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@map("recipient")
+}
+
+model Letter {
+  id          String     @id @default(cuid()) @map("_id")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  title       String
+  body        String
+  file        String?
+  recipientId String?    @map("recipient_id")
+  recipient   Recipient? @relation(fields: [recipientId], references: [id])
+
+  @@map("letter")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
